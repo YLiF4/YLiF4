@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.ylif4.cf","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="普通做法分块，设块长为 $len$。我们求出每个块内的ST表，再求出块之间的ST表。 当$len&#x3D;\log n$时预处理复杂度最优，为$O(\dfrac{n}{\log n} \log n+\dfrac{n}{\log n} \log n\log\log n)&#x3D;O(n\log\log n)$。 查询就可以直接分成左-中-右三段进行查询。 算法改进左右两端本质上是对前后缀的操作。可以在预处理的时候">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Four Russian 算法">
+<meta property="og:url" content="https://www.ylif4.cf/four-russian-%E7%AE%97%E6%B3%95">
+<meta property="og:site_name" content="YLiF4">
+<meta property="og:description" content="普通做法分块，设块长为 $len$。我们求出每个块内的ST表，再求出块之间的ST表。 当$len&#x3D;\log n$时预处理复杂度最优，为$O(\dfrac{n}{\log n} \log n+\dfrac{n}{\log n} \log n\log\log n)&#x3D;O(n\log\log n)$。 查询就可以直接分成左-中-右三段进行查询。 算法改进左右两端本质上是对前后缀的操作。可以在预处理的时候">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-26T13:51:54.610Z">
+<meta property="article:modified_time" content="2021-07-26T13:56:08.531Z">
+<meta property="article:author" content="LewisLi">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.ylif4.cf/four-russian-%E7%AE%97%E6%B3%95">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.ylif4.cf/four-russian-%E7%AE%97%E6%B3%95","path":"four-russian-算法","title":"Four Russian 算法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Four Russian 算法 | YLiF4</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">YLiF4</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E5%81%9A%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">普通做法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%94%B9%E8%BF%9B"><span class="nav-number">2.</span> <span class="nav-text">算法改进</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%84%E5%AD%A6%E4%BC%98%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">玄学优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Luogu-P3865-%E3%80%90%E6%A8%A1%E6%9D%BF%E3%80%91ST%E8%A1%A8"><span class="nav-number">4.1.</span> <span class="nav-text">Luogu P3865 【模板】ST表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Luogu-P3793-%E7%94%B1%E4%B9%83%E6%95%91%E7%88%B7%E7%88%B7"><span class="nav-number">4.2.</span> <span class="nav-text">Luogu P3793 由乃救爷爷</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">LewisLi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+          </div>
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.ylif4.cf/four-russian-%E7%AE%97%E6%B3%95">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LewisLi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YLiF4">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Four Russian 算法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-07-26 21:51:54 / 修改时间：21:56:08" itemprop="dateCreated datePublished" datetime="2021-07-26T21:51:54+08:00">2021-07-26</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="普通做法"><a href="#普通做法" class="headerlink" title="普通做法"></a>普通做法</h1><p>分块，设块长为 $len$。我们求出每个块内的ST表，再求出块之间的ST表。</p>
+<p>当$len=\log n$时预处理复杂度最优，为$O(\dfrac{n}{\log n} \log n+\dfrac{n}{\log n} \log n\log\log n)=O(n\log\log n)$。</p>
+<p>查询就可以直接分成左-中-右三段进行查询。</p>
+<h1 id="算法改进"><a href="#算法改进" class="headerlink" title="算法改进"></a>算法改进</h1><p>左右两端本质上是对前后缀的操作。可以在预处理的时候 $O(n)$ 求出块内前后缀最大值。</p>
+<p>这样查询的时候就只要访问一个 ST 表。</p>
+<h1 id="玄学优化"><a href="#玄学优化" class="headerlink" title="玄学优化"></a>玄学优化</h1><p>分块乱搞，设块大小为 $len$。</p>
+<p>我们暴力预处理每个块前缀、后缀的最大值，用 ST表 求出任意连续块之间的最大值。</p>
+<p>预处理复杂度为 $O(\dfrac{n}{len}\log\dfrac{n}{len}+n+n) = O(n)$。</p>
+<p>查询的时候找中间夹着的块的最大值、左侧后缀和右侧前缀。</p>
+<p>查询显然是 $O(1)$ 的。</p>
+<p>但是这个做法有问题。当左右端点在同一块内时就假了。</p>
+<p>两个端点在同一块内的概率是 $\dfrac{len}{n}$，每次查询的代价是 $len$，所以期望为 $O(\dfrac{len^2}{n})$。</p>
+<p>令 $len = \sqrt n$  每次暴力查询期望复杂度为 $O(1)$。</p>
+<p>这样我们就得到了一个 $O(n)$ 预处理， $O(1)$ 查询的做法。时间复杂度期望 $O(n)$。</p>
+<p>但是出题人不会卡你吗？</p>
+<p>可能会，但一般卡不掉，而且不敢卡。</p>
+<p>因为我们可以对块的大小进行调整，而出题人不知道你的块长。而只要让两端尽量在不同块内就可以保证复杂度。</p>
+<p>如果出题人刻意卡这种做法，就要让 $l,r$ 尽量接近。但这样暴力就很可能直接硬跑过去。</p>
+<p>这个算法的复杂度接近下界，并且无论是复杂度还是常数、代码难度都较小，所以较实用。</p>
+<h1 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h1><h2 id="Luogu-P3865-【模板】ST表"><a href="#Luogu-P3865-【模板】ST表" class="headerlink" title="Luogu P3865 【模板】ST表"></a><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3865">Luogu P3865 【模板】ST表</a></h2><p>ST 表板题，可以作为板子打。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="keyword">int</span> a[N], st[N/<span class="number">10</span>][<span class="number">25</span>];</span><br><span class="line"><span class="keyword">int</span> pre[N], suf[N];</span><br><span class="line"><span class="keyword">int</span> block, n, m;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">register</span> <span class="keyword">int</span> n = <span class="number">0</span>, f = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">register</span> <span class="keyword">char</span> ch = <span class="built_in">getchar</span>();</span><br><span class="line">    <span class="keyword">for</span> (; ch &lt; <span class="string">&#x27;0&#x27;</span> || ch &gt; <span class="string">&#x27;9&#x27;</span>; ch = <span class="built_in">getchar</span>()) <span class="keyword">if</span> (ch == <span class="string">&#x27;-&#x27;</span>) f = <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span> (; ch &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; ch &lt;= <span class="string">&#x27;9&#x27;</span>; ch = <span class="built_in">getchar</span>()) n = (n &lt;&lt; <span class="number">3</span>) + (n &lt;&lt; <span class="number">1</span>) + (ch ^ <span class="string">&#x27;0&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> n * f;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getpos</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123; <span class="keyword">return</span> (x + block - <span class="number">1</span>) / block; &#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bf</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> res = a[l];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = l; i &lt;= r; i++)</span><br><span class="line">        res = <span class="built_in">max</span>(res, a[i]);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> p = <span class="built_in">getpos</span>(n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> len = <span class="number">1</span>; len &lt;= <span class="number">20</span>; len++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= p - (<span class="number">1</span> &lt;&lt; len) + <span class="number">1</span>; i++)</span><br><span class="line">            st[i][len] = <span class="built_in">max</span>(st[i][len - <span class="number">1</span>], st[i + (<span class="number">1</span> &lt;&lt; (len - <span class="number">1</span>))][len - <span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">if</span> (i % block != <span class="number">1</span>)</span><br><span class="line">            pre[i] = <span class="built_in">max</span>(pre[i - <span class="number">1</span>], a[i]);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            pre[i] = a[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">        <span class="keyword">if</span> (i % block)</span><br><span class="line">            suf[i] = <span class="built_in">max</span>(suf[i + <span class="number">1</span>], a[i]);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            suf[i] = a[i];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">query</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> e = <span class="built_in">log2</span>(r - l - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">int</span> res = <span class="built_in">max</span>(st[l + <span class="number">1</span>][e], st[r - (<span class="number">1</span> &lt;&lt; e)][e]);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    n = <span class="built_in">read</span>(), m = <span class="built_in">read</span>();</span><br><span class="line">    block = <span class="built_in">log2</span>(n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="built_in">getpos</span>(i);</span><br><span class="line">        a[i] = <span class="built_in">read</span>();</span><br><span class="line">        st[j][<span class="number">0</span>] = <span class="built_in">max</span>(a[i], st[j][<span class="number">0</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">init</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> x, y; m; m--) &#123;</span><br><span class="line">        x = <span class="built_in">read</span>(), y = <span class="built_in">read</span>();</span><br><span class="line">        <span class="keyword">int</span> l = <span class="built_in">getpos</span>(x), r = <span class="built_in">getpos</span>(y);</span><br><span class="line">        <span class="keyword">if</span> (l == r) <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="built_in">bf</span>(x, y));</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (r - l == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="built_in">max</span>(pre[y], suf[x]));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="built_in">max</span>(<span class="built_in">max</span>(pre[y],suf[x]),<span class="built_in">query</span>(l,r)));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Luogu-P3793-由乃救爷爷"><a href="#Luogu-P3793-由乃救爷爷" class="headerlink" title="Luogu P3793 由乃救爷爷"></a><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3793">Luogu P3793 由乃救爷爷</a></h2><p>详见 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/Lewis-Li/p/LG_P3793.html">Luogu P3793 由乃救爷爷</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fft-%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E5%9C%9F" rel="prev" title="FFT 从入门到入土">
+                  <i class="fa fa-chevron-left"></i> FFT 从入门到入土
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/%E5%8F%AF%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" rel="next" title="可持久化数据结构">
+                  可持久化数据结构 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LewisLi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

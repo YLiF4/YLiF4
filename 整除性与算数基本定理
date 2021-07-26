@@ -20,27 +20,27 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.ylif4.cf","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="定义若一个大于1的正整数只能被1和它本身整除，则称该数为质数（或素数），否则称该数为合数（复合数）。 如果一个正整数$a$有一个因数$b$，并且$b$为质数，则称$b$为$a$的质因数。 若有正整数$a_1, a_2,\cdot \cdot \cdot ,a_n(n \geqslant 2)$和$d$，并且$d|a_1,d|a_2,\cdot \cdot \cdot ,d|a_n$，则称$d$为$">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://www.ylif4.cf/hello-world">
+<meta property="og:title" content="整除性与算数基本定理">
+<meta property="og:url" content="https://www.ylif4.cf/%E6%95%B4%E9%99%A4%E6%80%A7%E4%B8%8E%E7%AE%97%E6%95%B0%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86">
 <meta property="og:site_name" content="YLiF4">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="定义若一个大于1的正整数只能被1和它本身整除，则称该数为质数（或素数），否则称该数为合数（复合数）。 如果一个正整数$a$有一个因数$b$，并且$b$为质数，则称$b$为$a$的质因数。 若有正整数$a_1, a_2,\cdot \cdot \cdot ,a_n(n \geqslant 2)$和$d$，并且$d|a_1,d|a_2,\cdot \cdot \cdot ,d|a_n$，则称$d$为$">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-07-26T12:49:24.998Z">
-<meta property="article:modified_time" content="2021-07-26T12:49:24.998Z">
+<meta property="article:published_time" content="2021-07-26T13:51:54.587Z">
+<meta property="article:modified_time" content="2021-07-26T13:58:59.658Z">
 <meta property="article:author" content="LewisLi">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://www.ylif4.cf/hello-world">
+<link rel="canonical" href="https://www.ylif4.cf/%E6%95%B4%E9%99%A4%E6%80%A7%E4%B8%8E%E7%AE%97%E6%95%B0%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.ylif4.cf/hello-world","path":"hello-world","title":"Hello World"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.ylif4.cf/%E6%95%B4%E9%99%A4%E6%80%A7%E4%B8%8E%E7%AE%97%E6%95%B0%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86","path":"整除性与算数基本定理","title":"整除性与算数基本定理"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Hello World | YLiF4</title>
+<title>整除性与算数基本定理 | YLiF4</title>
   
 
 
@@ -118,7 +118,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">引理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B4%A8%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">质数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%A8%E6%95%B0%E7%9A%84%E5%88%A4%E5%AE%9A"><span class="nav-number">3.1.</span> <span class="nav-text">质数的判定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%95%E9%99%A4%E6%B3%95"><span class="nav-number">3.1.1.</span> <span class="nav-text">试除法</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -174,7 +174,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.ylif4.cf/hello-world">
+    <link itemprop="mainEntityOfPage" href="https://www.ylif4.cf/%E6%95%B4%E9%99%A4%E6%80%A7%E4%B8%8E%E7%AE%97%E6%95%B0%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -187,7 +187,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          整除性与算数基本定理
         </h1>
 
         <div class="post-meta-container">
@@ -197,8 +197,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2021-07-26 20:49:24" itemprop="dateCreated datePublished" datetime="2021-07-26T20:49:24+08:00">2021-07-26</time>
+      <time title="创建时间：2021-07-26 21:51:54 / 修改时间：21:58:59" itemprop="dateCreated datePublished" datetime="2021-07-26T21:51:54+08:00">2021-07-26</time>
     </span>
 
   
@@ -211,20 +212,30 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
+        <h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>若一个大于1的正整数只能被1和它本身整除，则称该数为质数（或素数），否则称该数为合数（复合数）。</p>
+<p>如果一个正整数$a$有一个因数$b$，并且$b$为质数，则称$b$为$a$的质因数。</p>
+<p>若有正整数$a_1, a_2,\cdot \cdot \cdot ,a_n(n \geqslant 2)$和$d$，并且$d|a_1,d|a_2,\cdot \cdot \cdot ,d|a_n$，则称$d$为$a_1,\cdot \cdot \cdot ,a_n$的公因数。其中最大的那一个数叫做$a_1,\cdot \cdot \cdot ,a_n$的最大公因数，写作$\gcd(a_1,\cdot \cdot \cdot ,a_n)$。</p>
+<p>若有正整数$a_1, a_2,\cdot \cdot \cdot ,a_n(n \geqslant 2)$和$m$，并且$a_1|m,a_2|m,\cdot \cdot \cdot ,a_n|m$，则称$m$为$a_1,\cdot \cdot \cdot ,a_n$的公倍数。其中最小的那一个数叫做$a_1,\cdot \cdot \cdot ,a_n$的最小公倍数，写作$\operatorname{lcm}(a_1,\cdot \cdot \cdot ,a_n)$。</p>
+<p>在整个自然数集合中，质数数量不多，分布稀疏。对于一个足够大的数$N$，不超过$N$的质数大约有$\frac{n}{\ln N}$个，即每$\ln N$个数中大约有一个质数。</p>
+<h1 id="引理"><a href="#引理" class="headerlink" title="引理"></a>引理</h1><ol>
+<li><p>一个大于1的正整数$a$的大于1的最小因数一定是质数。</p>
+<p>如果$a$是质数，则引理显然成立。</p>
+<p>如果$a$是合数，则除去1和$a$以外，一定还有其它正因数，设那个最小的为$b$。</p>
+<p>若$b$是合数，则$b$必然有一个大于1小于$b$的因数$c$，由$c|b,b|a$得到$c|a$且$c&lt;a$，矛盾。引理得证。</p>
+<p>这个引理说明了任何一个大于1的正整数都至少有一个质因数。</p>
+</li>
+<li><p>有无限多个质数。</p>
+<p>假设质数有有限多个，个数为$n$，分别为$p_1,p_2,\cdot \cdot \cdot ,p_n$。令$a=p_1p_2 \cdot \cdot \cdot p_n+1$。如果$a$是素数，因为$a \ne p_1,p_2,\cdot\cdot\cdot,p_n$，所以质数最少应有$n+1$个，矛盾。如果$a$是合数，由引理1得$a$一定有一个质因数$b$且$b \ne p_1,p_2,\cdot\cdot\cdot,p_n$，矛盾。</p>
+</li>
+<li><p>若一正整数$a$为合数，则存在一个能整除$a$的数$d$，其中$2\leqslant d \leqslant \sqrt a$</p>
+<p>由定义，因为$a$为合数，所以存在一个能整除$a$的数$m$，其中$2\leqslant m \leqslant n-1$。</p>
+</li>
+<li><p>任何大于1的整数$a$都能分解成质因数的连乘积，即$a = \prod_{i=1}^{n}p_i \ (n \geqslant 1)$</p>
+<p>当$a$为质数时，$a=p$，引理成立。</p>
+<p>当$a$为合数时，由引理1，$a$必然有一个质因数$p_1$，使得$a=p_1 \cdot a_1 (a_1 &gt; 1)$。如果$a_1$为质数，引理成立。否则，重复上述过程，最后必得$a = \prod_{i=1}^{n}p_i \ (n \geqslant 1)$。</p>
+</li>
+</ol>
+<h1 id="质数"><a href="#质数" class="headerlink" title="质数"></a>质数</h1><h2 id="质数的判定"><a href="#质数的判定" class="headerlink" title="质数的判定"></a>质数的判定</h2><h3 id="试除法"><a href="#试除法" class="headerlink" title="试除法"></a>试除法</h3>
     </div>
 
     
@@ -237,10 +248,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/%E7%8B%84%E5%88%A9%E5%85%8B%E9%9B%B7%E5%8D%B7%E7%A7%AF" rel="prev" title="狄利克雷卷积">
+                  <i class="fa fa-chevron-left"></i> 狄利克雷卷积
+                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/%E7%8B%84%E5%88%A9%E5%85%8B%E9%9B%B7%E5%8D%B7%E7%A7%AF" rel="next" title="狄利克雷卷积">
-                  狄利克雷卷积 <i class="fa fa-chevron-right"></i>
+                <a href="/%E6%9D%9C%E6%95%99%E7%AD%9B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0" rel="next" title="杜教筛学习笔记">
+                  杜教筛学习笔记 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>

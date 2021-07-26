@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.ylif4.cf","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="定义与性质后缀自动机（Suffix Automaton，简称 SAM）是用于解决字符串问题的强有力的工具。它是一个能够接受字符串所有后缀的最小 DFA。 SAM 是一张有向无环图，每个节点叫做状态，每条边被称作转移。 SAM 存在一个源点 $t$，称为初始状态。任何状态均可从初始状态到达。 每一个转移都对应于一个字母，每个状态的转移都各不相同。 存在若干个终止状态。从 $t$ 出发走到一个终止状态">
+<meta property="og:type" content="article">
+<meta property="og:title" content="后缀自动机学习笔记">
+<meta property="og:url" content="https://www.ylif4.cf/%E5%90%8E%E7%BC%80%E8%87%AA%E5%8A%A8%E6%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0">
+<meta property="og:site_name" content="YLiF4">
+<meta property="og:description" content="定义与性质后缀自动机（Suffix Automaton，简称 SAM）是用于解决字符串问题的强有力的工具。它是一个能够接受字符串所有后缀的最小 DFA。 SAM 是一张有向无环图，每个节点叫做状态，每条边被称作转移。 SAM 存在一个源点 $t$，称为初始状态。任何状态均可从初始状态到达。 每一个转移都对应于一个字母，每个状态的转移都各不相同。 存在若干个终止状态。从 $t$ 出发走到一个终止状态">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-26T13:51:54.638Z">
+<meta property="article:modified_time" content="2021-07-26T13:57:49.330Z">
+<meta property="article:author" content="LewisLi">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.ylif4.cf/%E5%90%8E%E7%BC%80%E8%87%AA%E5%8A%A8%E6%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.ylif4.cf/%E5%90%8E%E7%BC%80%E8%87%AA%E5%8A%A8%E6%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0","path":"后缀自动机学习笔记","title":"后缀自动机学习笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>后缀自动机学习笔记 | YLiF4</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">YLiF4</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%B8%8E%E6%80%A7%E8%B4%A8"><span class="nav-number">1.</span> <span class="nav-text">定义与性质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%84%E9%80%A0-SAM"><span class="nav-number">2.</span> <span class="nav-text">构造 SAM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9D%9F%E4%BD%8D%E7%BD%AE%E9%9B%86%E5%90%88-endpos"><span class="nav-number">2.1.</span> <span class="nav-text">结束位置集合 endpos</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%BC%80%E9%93%BE%E6%8E%A5%E5%92%8C-parent-%E6%A0%91"><span class="nav-number">2.2.</span> <span class="nav-text">后缀链接和 parent 树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E6%80%A7%E8%AF%81%E6%98%8E"><span class="nav-number">2.4.</span> <span class="nav-text">正确性证明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.5.</span> <span class="nav-text">代码实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">应用</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">LewisLi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+          </div>
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.ylif4.cf/%E5%90%8E%E7%BC%80%E8%87%AA%E5%8A%A8%E6%9C%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LewisLi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YLiF4">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          后缀自动机学习笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-07-26 21:51:54 / 修改时间：21:57:49" itemprop="dateCreated datePublished" datetime="2021-07-26T21:51:54+08:00">2021-07-26</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="定义与性质"><a href="#定义与性质" class="headerlink" title="定义与性质"></a>定义与性质</h1><p>后缀自动机（Suffix Automaton，简称 SAM）是用于解决字符串问题的强有力的工具。它是一个能够接受字符串所有后缀的最小 DFA。</p>
+<p>SAM 是一张有向无环图，每个节点叫做<strong>状态</strong>，每条边被称作<strong>转移</strong>。</p>
+<p>SAM 存在一个源点 $t$，称为<strong>初始状态</strong>。任何状态均可从初始状态到达。</p>
+<p>每一个转移都对应于一个字母，每个状态的转移都各不相同。</p>
+<p>存在若干个<strong>终止状态</strong>。从 $t$ 出发走到一个终止状态，则这条路径对应原串的一个后缀。同样的，任意一个后缀都可以通过 SAM 上从初始状态到终止状态的一条路径来表示。</p>
+<p>SAM 上每一条路径对应原串的一个子串。换句话说， SAM 上的路径和原串上的子串一一对应。</p>
+<p>到达某个状态的路径不止一条，所以一个状态表示的实际上是一个集合。</p>
+<h1 id="构造-SAM"><a href="#构造-SAM" class="headerlink" title="构造 SAM"></a>构造 SAM</h1><p>在构造 SAM 之前，我们需要了解一些前置知识。</p>
+<h2 id="结束位置集合-endpos"><a href="#结束位置集合-endpos" class="headerlink" title="结束位置集合 endpos"></a>结束位置集合 endpos</h2><p>对于串 $s$ 的任意一个非空的子串 $t$，我们定义 $\operatorname{endpos}(t)$ 为字符串 $t$ 在 $s$ 中出现的末尾位置的集合。</p>
+<p>例如，有 $s=”abcaabcabca”$，$t=”abc”$ 的 $\operatorname{endpos}(t)={3, 7,10}$（下标从 $1$ 开始）。</p>
+<p>两个非空子串 $t_1,t_2$ 的 $\operatorname{endpos}$ 可能相等，我们称这两个 $\operatorname{endpos}$ 是<strong>等价的</strong>，它们同属于同一个<strong>等价类</strong>。原串 $s$ 的所有子串被这样划分为若干个<strong>等价类</strong>。</p>
+<blockquote>
+<p>引理1：同属于同一个等价类的串之间必然有后缀关系。如果两个字符串 $t_1,t_2\ (|t_1| \leqslant |t_2|)$ 的 $\operatorname{endpos}$ 相同，当且仅当 $t_1$ 在 $s$ 中每次出现，都是 $t_2$ 的后缀。</p>
+</blockquote>
+<p>由定义，引理显然成立。</p>
+<blockquote>
+<p>引理2：考虑两个 $s$ 的子串 $u,v \ (|u| \leqslant |v|)$，有<br>$$<br>\begin{cases}<br>\operatorname{endpos}(v) \subseteq \operatorname{endpos}(u) &amp; \text{if}\ u\ \text{is a suffix of}\ v\<br>\operatorname{endpos}(u) \cap \operatorname{endpos}(v) = \varnothing &amp; \text{otherwise}<br>\end{cases}<br>$$</p>
+</blockquote>
+<p>如果 $u$ 是 $v$ 的后缀，那么每一次 $v$ 出现 $u$ 都会出现，所以 $\operatorname{endpos}(v) \subseteq \operatorname{endpos}(u)$。否则，两者绝对不会有相同的 $\operatorname{endpos}$。</p>
+<blockquote>
+<p>引理3：每一个 $\operatorname{endpos}$ 类都是由若干个长度连续，并且具有后缀关系的子串构成的。</p>
+</blockquote>
+<p>上面引理的推论</p>
+<blockquote>
+<p>引理4：同一个 $\operatorname{endpos}$ 类中的子串同时加上同一个字符后，它们仍然属于同一个 $\operatorname{endpos}$ 类。</p>
+</blockquote>
+<p>同时加上一个字符，仍然满足后缀关系。</p>
+<h2 id="后缀链接和-parent-树"><a href="#后缀链接和-parent-树" class="headerlink" title="后缀链接和 parent 树"></a>后缀链接和 parent 树</h2><p>对于一个不是初始状态的状态 $v$，我们将其中的串按照长度从大到小排序，由引理3，除去最大的以外，其余每个子串都是最大串的后缀。记这个最大串为 $\operatorname{longest}(v)$，其长度为 $\text{len}(v)$。</p>
+<p>我们找到第一个 $\operatorname{longest}(v)$ 的后缀 $t$ 使得  $v\subsetneqq\operatorname{endpos}(t)=u$。我们就将 $\operatorname{fail}(v) \rightarrow u$。</p>
+<blockquote>
+<p>引理5：所有后缀链接构成了一棵树。</p>
+</blockquote>
+<p>每个状态的出度和入度都为 $1$。我们称这棵树为 parent 树。</p>
+<blockquote>
+<p>引理6：由后缀链接构成的 parent 树与后缀树相同。</p>
+</blockquote>
+<p>不知道。</p>
+<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><p>我们定义在插入某个字符 $c$ 前的状态为 $last$，新插入的状态为  $now$。</p>
+<p>我们沿着 $last$ 的 $fail$ 边向上跳，设每次跳到状态 $p$。如果 $p$ 没有连向 $c$ 的边，那么就讲它直接连向 $now$。</p>
+<p>如果最后跳到了 $t$ 就将 $\text{fail}(now) \rightarrow t$。</p>
+<p>否则分成两种情况：</p>
+<p>我们定义状态 $q$ 为 $p$ 转移为 $c$ 的状态。</p>
+<ol>
+<li><p>$\text{len}(p) = \text{len}(p) + 1$</p>
+<p>说明 $q$ 和 $p$ 之间只差了一个字符。此时可以直接 $\text{fail}(now) \rightarrow q$。</p>
+</li>
+<li><p>否则，我们需要新建一个节点来辅助建边。</p>
+<p>我们新建状态 $clone = q$，复制其除了 $len$ 的所有信息。</p>
+<p>让 $\text{len}(clone)=\text{len}(p)+1$。</p>
+<p>此时我们让 $\text{fail}(q) \rightarrow clone, \text{fail}(now) \rightarrow clone$。</p>
+</li>
+</ol>
+<h2 id="正确性证明"><a href="#正确性证明" class="headerlink" title="正确性证明"></a>正确性证明</h2><p>不会。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Suffix_Automaton</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></span><br><span class="line">        <span class="keyword">int</span> len, fail;</span><br><span class="line">        <span class="keyword">int</span> ch[<span class="number">26</span>];</span><br><span class="line">    &#125; tr[N &lt;&lt; <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> tot = <span class="number">1</span>, last = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ins</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> p = last, q, now = ++tot;</span><br><span class="line">        siz[now] = <span class="number">1</span>;</span><br><span class="line">        tr[now].len = tr[p].len + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (; p &amp;&amp; !tr[p].ch[x]; p = tr[p].fail)</span><br><span class="line">            tr[p].ch[x] = now;</span><br><span class="line">        <span class="keyword">if</span> (!p) &#123;</span><br><span class="line">            tr[now].fail = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            q = tr[p].ch[x];</span><br><span class="line">            <span class="keyword">if</span> (tr[q].len == tr[p].len + <span class="number">1</span>) &#123;</span><br><span class="line">                tr[now].fail = q;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> cl = ++tot;</span><br><span class="line">                tr[cl] = tr[q];</span><br><span class="line">                tr[cl].len = tr[p].len + <span class="number">1</span>;</span><br><span class="line">                tr[q].fail = tr[now].fail = cl;</span><br><span class="line">                <span class="keyword">for</span> (; p &amp;&amp; tr[p].ch[x] == q; p = tr[p].fail)</span><br><span class="line">                    tr[p].ch[x] = cl;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        last = now;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; SAM;</span><br></pre></td></tr></table></figure>
+
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><p>咕咕咕</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/%E5%8F%AF%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" rel="prev" title="可持久化数据结构">
+                  <i class="fa fa-chevron-left"></i> 可持久化数据结构
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/%E6%B5%85%E8%B0%88%E5%8D%9A%E5%BC%88%E8%AE%BA%E4%B8%8E-sg-%E5%87%BD%E6%95%B0" rel="next" title="浅谈博弈论与 SG 函数">
+                  浅谈博弈论与 SG 函数 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LewisLi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
