@@ -49,7 +49,11 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-</head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -228,8 +232,12 @@
 </blockquote>
 <p>由定义，引理显然成立。</p>
 <blockquote>
-<p>引理2：考虑两个 $s$ 的子串 $u,v \ (|u| \leqslant |v|)$，有<br>$$<br>\begin{cases}<br>\operatorname{endpos}(v) \subseteq \operatorname{endpos}(u) &amp; \text{if}\ u\ \text{is a suffix of}\ v\<br>\operatorname{endpos}(u) \cap \operatorname{endpos}(v) = \varnothing &amp; \text{otherwise}<br>\end{cases}<br>$$</p>
-</blockquote>
+<p>引理2：考虑两个 $s$ 的子串 $u,v \ (|u| \leqslant |v|)$，有</p>
+<script type="math/tex; mode=display">
+\begin{cases}
+\operatorname{endpos}(v) \subseteq \operatorname{endpos}(u) & \text{if}\ u\ \text{is a suffix of}\ v\\
+\operatorname{endpos}(u) \cap \operatorname{endpos}(v) = \varnothing & \text{otherwise}
+\end{cases}</script></blockquote>
 <p>如果 $u$ 是 $v$ 的后缀，那么每一次 $v$ 出现 $u$ 都会出现，所以 $\operatorname{endpos}(v) \subseteq \operatorname{endpos}(u)$。否则，两者绝对不会有相同的 $\operatorname{endpos}$。</p>
 <blockquote>
 <p>引理3：每一个 $\operatorname{endpos}$ 类都是由若干个长度连续，并且具有后缀关系的子串构成的。</p>
@@ -266,7 +274,6 @@
 </ol>
 <h2 id="正确性证明"><a href="#正确性证明" class="headerlink" title="正确性证明"></a>正确性证明</h2><p>不会。</p>
 <h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Suffix_Automaton</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></span><br><span class="line">        <span class="keyword">int</span> len, fail;</span><br><span class="line">        <span class="keyword">int</span> ch[<span class="number">26</span>];</span><br><span class="line">    &#125; tr[N &lt;&lt; <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> tot = <span class="number">1</span>, last = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ins</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> p = last, q, now = ++tot;</span><br><span class="line">        siz[now] = <span class="number">1</span>;</span><br><span class="line">        tr[now].len = tr[p].len + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (; p &amp;&amp; !tr[p].ch[x]; p = tr[p].fail)</span><br><span class="line">            tr[p].ch[x] = now;</span><br><span class="line">        <span class="keyword">if</span> (!p) &#123;</span><br><span class="line">            tr[now].fail = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            q = tr[p].ch[x];</span><br><span class="line">            <span class="keyword">if</span> (tr[q].len == tr[p].len + <span class="number">1</span>) &#123;</span><br><span class="line">                tr[now].fail = q;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> cl = ++tot;</span><br><span class="line">                tr[cl] = tr[q];</span><br><span class="line">                tr[cl].len = tr[p].len + <span class="number">1</span>;</span><br><span class="line">                tr[q].fail = tr[now].fail = cl;</span><br><span class="line">                <span class="keyword">for</span> (; p &amp;&amp; tr[p].ch[x] == q; p = tr[p].fail)</span><br><span class="line">                    tr[p].ch[x] = cl;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        last = now;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; SAM;</span><br></pre></td></tr></table></figure>
-
 <h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><p>咕咕咕</p>
 
     </div>

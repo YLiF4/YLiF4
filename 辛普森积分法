@@ -49,7 +49,11 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-</head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -216,17 +220,19 @@
 <p>我们需要一种高效的求解这种积分的近似值的方法，于是就有了<strong>辛普森积分法</strong>。</p>
 <h1 id="普通辛普森法"><a href="#普通辛普森法" class="headerlink" title="普通辛普森法"></a>普通辛普森法</h1><p>辛普森法的基本思想是将求解区间分成若干段，每一段都使用二次函数的积分公式来进行求解。</p>
 <p>二次函数积分公式（辛普森公式）：</p>
-<p>对于一个二次函数$f(x)=Ax^2+Bx+C$，有<br>$$<br>\int_l^r f(x) {\mathrm d}x = \frac{(r-l)(f(l)+f(r)+4 f(\frac{l+r}{2}))}{6}<br>$$<br>证（from OI-Wiki）：</p>
-<p>求积分可得<br>$$<br>F(x)=\int_0^x f(x) {\mathrm d}x = \frac{a}{3}x^3+\frac{b}{2}x^2+cx+D<br>$$<br>那么则有<br>$$<br>\begin{aligned} \int_l^r f(x) {\mathrm d}x &amp;= F(r)-F(l) \ &amp;= \frac{a}{3}(r^3-l^3)+\frac{b}{2}(r^2-l^2)+c(r-l) \ &amp;=(r-l)(\frac{a}{3}(l^2+r^2+lr)+\frac{b}{2}(l+r)+c) \ &amp;=\frac{r-l}{6}(2al^2+2ar^2+2alr+3bl+3br+6c)\ &amp;=\frac{r-l}{6}((al^2+bl+c)+(ar^2+br+c)+4(a(\frac{l+r}{2})^2+b(\frac{l+r}{2})+c)) \ &amp;=\frac{r-l}{6}(f(l)+f(r)+4f(\frac{l+r}{2})) \end{aligned}<br>$$<br>然后我们通过套公式就可以写出这样一段代码：</p>
+<p>对于一个二次函数$f(x)=Ax^2+Bx+C$，有</p>
+<script type="math/tex; mode=display">
+\int_l^r f(x) {\mathrm d}x = \frac{(r-l)(f(l)+f(r)+4 f(\frac{l+r}{2}))}{6}</script><p>证（from OI-Wiki）：</p>
+<p>求积分可得</p>
+<script type="math/tex; mode=display">
+F(x)=\int_0^x f(x) {\mathrm d}x = \frac{a}{3}x^3+\frac{b}{2}x^2+cx+D</script><p>那么则有</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \int_l^r f(x) {\mathrm d}x &= F(r)-F(l) \\ &= \frac{a}{3}(r^3-l^3)+\frac{b}{2}(r^2-l^2)+c(r-l) \\ &=(r-l)(\frac{a}{3}(l^2+r^2+lr)+\frac{b}{2}(l+r)+c) \\ &=\frac{r-l}{6}(2al^2+2ar^2+2alr+3bl+3br+6c)\\ &=\frac{r-l}{6}((al^2+bl+c)+(ar^2+br+c)+4(a(\frac{l+r}{2})^2+b(\frac{l+r}{2})+c)) \\ &=\frac{r-l}{6}(f(l)+f(r)+4f(\frac{l+r}{2})) \end{aligned}</script><p>然后我们通过套公式就可以写出这样一段代码：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">simpson</span><span class="params">(<span class="keyword">double</span> l, <span class="keyword">double</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">double</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> (r - l) * (<span class="built_in">f</span>(l) + <span class="number">4</span> * <span class="built_in">f</span>(mid) + <span class="built_in">f</span>(r)) / <span class="number">6</span>; <span class="comment">//f(x)为待求解的函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
 <h1 id="自适应辛普森"><a href="#自适应辛普森" class="headerlink" title="自适应辛普森"></a>自适应辛普森</h1><p>普通的辛普森积分法为了保证精度，在时间效率上会很大地受到区间的限制。</p>
 <p>问题在于：区间少了精度不够，区间多了又太慢。</p>
 <p>自适应辛普森做到了<strong>自动控制拆分区间的大小</strong>。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">asr</span><span class="params">(<span class="keyword">double</span> l, <span class="keyword">double</span> r, <span class="keyword">double</span> eps, <span class="keyword">double</span> ans)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">double</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">double</span> fl = <span class="built_in">simpson</span>(l, mid), fr = <span class="built_in">simpson</span>(mid, r);</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">abs</span>(fl + fr - ans) &lt;= <span class="number">15</span> * eps)</span><br><span class="line">        <span class="keyword">return</span> fl + fr + (fl + fr - ans) / <span class="number">15</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">asr</span>(l, mid, eps / <span class="number">2</span>, fl) + <span class="built_in">asr</span>(mid, r, eps / <span class="number">2</span>, fr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>到了这里，你就可以去做 <a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4525"><strong>Luogu P4525 【模板】自适应辛普森法1</strong></a>了！</p>
 
     </div>

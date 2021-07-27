@@ -49,7 +49,11 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-</head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -232,7 +236,7 @@
 </li>
 <li><p>任何大于1的整数$a$都能分解成质因数的连乘积，即$a = \prod_{i=1}^{n}p_i \ (n \geqslant 1)$</p>
 <p>当$a$为质数时，$a=p$，引理成立。</p>
-<p>当$a$为合数时，由引理1，$a$必然有一个质因数$p_1$，使得$a=p_1 \cdot a_1 (a_1 &gt; 1)$。如果$a_1$为质数，引理成立。否则，重复上述过程，最后必得$a = \prod_{i=1}^{n}p_i \ (n \geqslant 1)$。</p>
+<p>当$a$为合数时，由引理1，$a$必然有一个质因数$p<em>1$，使得$a=p_1 \cdot a_1 (a_1 &gt; 1)$。如果$a_1$为质数，引理成立。否则，重复上述过程，最后必得$a = \prod</em>{i=1}^{n}p_i \ (n \geqslant 1)$。</p>
 </li>
 </ol>
 <h1 id="质数"><a href="#质数" class="headerlink" title="质数"></a>质数</h1><h2 id="质数的判定"><a href="#质数的判定" class="headerlink" title="质数的判定"></a>质数的判定</h2><h3 id="试除法"><a href="#试除法" class="headerlink" title="试除法"></a>试除法</h3>

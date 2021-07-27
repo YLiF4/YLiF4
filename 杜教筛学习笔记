@@ -49,7 +49,11 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-</head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -222,35 +226,71 @@
 <li><p>完全积性函数：$\epsilon,I,id$</p>
 </li>
 </ul>
-<h2 id="狄利克雷卷积"><a href="#狄利克雷卷积" class="headerlink" title="狄利克雷卷积"></a>狄利克雷卷积</h2><p>设 $f, g$ 是两个数论函数，它们的狄利克雷卷积是：<br>$$<br>(f \cdot g)(n) = \sum \limits _{d | n} f(d) \cdot g(\frac{n}{d})<br>$$</p>
-<p>它满足交换律、结合律、分配律</p>
+<h2 id="狄利克雷卷积"><a href="#狄利克雷卷积" class="headerlink" title="狄利克雷卷积"></a>狄利克雷卷积</h2><p>设 $f, g$ 是两个数论函数，它们的狄利克雷卷积是：</p>
+<script type="math/tex; mode=display">
+(f \cdot g)(n) = \sum \limits _{d | n} f(d) \cdot g(\frac{n}{d})</script><p>它满足交换律、结合律、分配律</p>
 <p>单位元是$\epsilon$，即$f \cdot \epsilon = f$</p>
 <p>这里有几个常用的等式：</p>
-<p>$$\mu \cdot I = \epsilon \ \varphi \cdot I = id \ \mu \cdot id = \varphi$$</p>
-<h2 id="整除分块"><a href="#整除分块" class="headerlink" title="整除分块"></a>整除分块</h2><p>很多反演题目都会有一个这样的形式：$\large \sum_{i=1}^n \left\lfloor \frac{n}{i} \right\rfloor$</p>
+<script type="math/tex; mode=display">\mu \cdot I = \epsilon \\ \varphi \cdot I = id \\ \mu \cdot id = \varphi</script><h2 id="整除分块"><a href="#整除分块" class="headerlink" title="整除分块"></a>整除分块</h2><p>很多反演题目都会有一个这样的形式：$\large \sum_{i=1}^n \left\lfloor \frac{n}{i} \right\rfloor$</p>
 <p>对于这个式子，我们可以朴素地进行$O(N)$的计算。但是很多情况下，这种做法的复杂度是不被允许的。</p>
 <p>我们对于每一个$n$进行打表，发现有大量的值是重复的，而每一个值按顺序排布，呈块状形式，并且每一块的末尾为$\left\lfloor \dfrac{n}{\left\lfloor \frac{n}{i} \right\rfloor} \right\rfloor$。至此，我们就可以在$O(\sqrt{N})$的时间内进行计算。</p>
 <p>但是上式经常会乘上一些积性函数，这时就可以对积性函数求一个前缀和，每一次跳块也就相当于跳过了这一整段的函数和。</p>
 <p>一般的整除分块形式：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> l=<span class="number">1</span>,r=<span class="number">0</span>; l&lt;=n; l=r+<span class="number">1</span>) &#123;</span><br><span class="line">	r=n / (n / l);</span><br><span class="line">	<span class="comment">// Your Code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="莫比乌斯反演"><a href="#莫比乌斯反演" class="headerlink" title="莫比乌斯反演"></a>莫比乌斯反演</h1><p>若有<br>$$<br>F(n) = \sum_{d \mid n}f(d)<br>$$<br>则<br>$$<br>f(n) =\sum_{d \mid n} \mu(d) \cdot F(\frac{n}{d}) = \sum_{d \mid n} \mu(\frac{n}{d}) \cdot F(d)<br>$$</p>
-<h2 id="证明："><a href="#证明：" class="headerlink" title="证明："></a>证明：</h2><p>我们用狄利克雷卷积来表示上面的式子，得到$F = f \cdot I$</p>
-<p>将$F$卷上$\mu$得到<br>$$<br>F \cdot \mu = f \cdot I \cdot \mu \<br>F \cdot \mu = f \cdot (I \cdot \mu) = f \cdot \epsilon = f \<br>f = F \cdot \mu<br>$$<br>代入狄利克雷卷积原式：<br>$$<br>f(n) =\sum_{d \mid n} \mu(d) \cdot F(\frac{n}{d}) = \sum_{d \mid n} \mu(\frac{n}{d}) \cdot F(d)<br>$$<br>证毕。</p>
-<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="Luogu-P2398-GCD-SUM"><a href="#Luogu-P2398-GCD-SUM" class="headerlink" title="Luogu P2398 GCD SUM"></a><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2398">Luogu P2398 GCD SUM</a></h3><p>给定$n$，求<br>$$<br>\sum_{i=1}^{n}\sum_{j=1}^{n} \gcd(i,j)<br>$$</p>
-<h3 id="做法"><a href="#做法" class="headerlink" title="做法"></a>做法</h3><p>欧拉函数有一个性质：$\large \sum_{d \mid n} \varphi(d) = n$</p>
-<p>于是我们可以将原式子套路一下：<br>$$<br>\sum_{i=1}^{n}\sum_{j=1}^{n} \gcd(i,j) \<br>= \sum_{i=1}^{n}\sum_{j=1}^{n} \sum_{d \mid \gcd(i,j)} \varphi(d) \<br>= \sum_{i=1}^{n}\sum_{j=1}^{n} \sum_{d \mid i, d \mid j} \varphi(d)<br>$$<br>把$d$提到前面去：<br>$$<br>=\sum_{d=1}^{n} \sum_{i=1}^{\left\lfloor\frac{n}{d}\right\rfloor} \sum_{j=1}^{\left\lfloor\frac{n}{d}\right\rfloor}\varphi(d) \<br>= \sum_{d=1}^{n} \varphi(d) \cdot \left\lfloor\frac{n}{d}\right\rfloor \cdot \left\lfloor\frac{n}{d}\right\rfloor<br>$$</p>
-<p>这样就可以做了。可以用欧拉筛筛出欧拉函数的前缀和，使用整除分块进行优化。</p>
-<h3 id="Luogu-P2257-YY的GCD"><a href="#Luogu-P2257-YY的GCD" class="headerlink" title="Luogu P2257 YY的GCD"></a><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2257">Luogu P2257 YY的GCD</a></h3><p>给定$n,m$，求<br>$$<br>\sum_{i=1}^n\sum_{j=1}^m [\gcd(i,j)\in Prime]<br>$$</p>
-<h3 id="做法-1"><a href="#做法-1" class="headerlink" title="做法"></a>做法</h3><p>我们不知道$\gcd(i,j)$是多少，所以我们枚举它（这里假定$n \leqslant m$）：<br>$$<br>\sum_{p \in Prime}^n \sum_{i=1}^n\sum_{j=1}^m [\gcd(i,j)=p]<br>$$<br>同时除以$k$得到<br>$$<br>\sum_{p \in Prime}^n \sum_{i=1}^{\left\lfloor\frac{n}{p}\right\rfloor} \sum_{j=1}^{\left\lfloor\frac{m}{p}\right\rfloor} [\gcd(i,j)=1]<br>$$<br>利用一下$\mu$的性质：$\large \sum_{d \mid n} \mu(d) = [n = 1]$</p>
-<p>像上一题那样，把后面替换掉：<br>$$<br>\sum_{p \in Prime}^n \sum_{i=1}^{\left\lfloor\frac{n}{p}\right\rfloor} \sum_{j=1}^{\left\lfloor\frac{m}{p}\right\rfloor} \sum_{d \mid \gcd(i,j)} \mu(d)<br>$$<br>枚举$d$，把$d$提到前面。因为$d \mid \gcd(i,j)$，所以$i,j$是$d$的倍数，把它们上限全都除上$d$，后面再乘回去，发现个数可直接求，所以去掉两个求和：<br>$$<br>\sum_{p \in Prime}^n \sum_{d=1}^{\left\lfloor\frac{n}{p}\right\rfloor} \mu(d) \cdot \left\lfloor\frac{n}{pd}\right\rfloor \cdot \left\lfloor\frac{m}{pd}\right\rfloor<br>$$<br>但是这样的复杂度还是过不去。我们继续优化：设$T = p \cdot d$，枚举$T$，再次提到前面去：<br>$$<br>\sum_{T=1}^{n} \sum_{p \mid T, p \in Prime} \left\lfloor \frac{n}{T} \right\rfloor \cdot \left\lfloor \frac{m}{T} \right\rfloor \cdot \mu(\frac{T}{p})<br>$$<br>而后面还是可以预处理+整除分块进行优化。</p>
+<h1 id="莫比乌斯反演"><a href="#莫比乌斯反演" class="headerlink" title="莫比乌斯反演"></a>莫比乌斯反演</h1><p>若有</p>
+<script type="math/tex; mode=display">
+F(n) = \sum_{d \mid n}f(d)</script><p>则</p>
+<script type="math/tex; mode=display">
+f(n) =\sum_{d \mid n} \mu(d) \cdot F(\frac{n}{d}) = \sum_{d \mid n} \mu(\frac{n}{d}) \cdot F(d)</script><h2 id="证明："><a href="#证明：" class="headerlink" title="证明："></a>证明：</h2><p>我们用狄利克雷卷积来表示上面的式子，得到$F = f \cdot I$</p>
+<p>将$F$卷上$\mu$得到</p>
+<script type="math/tex; mode=display">
+F \cdot \mu = f \cdot I \cdot \mu \\
+F \cdot \mu = f \cdot (I \cdot \mu) = f \cdot \epsilon = f \\
+f = F \cdot \mu</script><p>代入狄利克雷卷积原式：</p>
+<script type="math/tex; mode=display">
+f(n) =\sum_{d \mid n} \mu(d) \cdot F(\frac{n}{d}) = \sum_{d \mid n} \mu(\frac{n}{d}) \cdot F(d)</script><p>证毕。</p>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="Luogu-P2398-GCD-SUM"><a href="#Luogu-P2398-GCD-SUM" class="headerlink" title="Luogu P2398 GCD SUM"></a><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2398">Luogu P2398 GCD SUM</a></h3><p>给定$n$，求</p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{n}\sum_{j=1}^{n} \gcd(i,j)</script><h3 id="做法"><a href="#做法" class="headerlink" title="做法"></a>做法</h3><p>欧拉函数有一个性质：$\large \sum_{d \mid n} \varphi(d) = n$</p>
+<p>于是我们可以将原式子套路一下：</p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{n}\sum_{j=1}^{n} \gcd(i,j) \\
+= \sum_{i=1}^{n}\sum_{j=1}^{n} \sum_{d \mid \gcd(i,j)} \varphi(d) \\
+= \sum_{i=1}^{n}\sum_{j=1}^{n} \sum_{d \mid i, d \mid j} \varphi(d)</script><p>把$d$提到前面去：</p>
+<script type="math/tex; mode=display">
+=\sum_{d=1}^{n} \sum_{i=1}^{\left\lfloor\frac{n}{d}\right\rfloor} \sum_{j=1}^{\left\lfloor\frac{n}{d}\right\rfloor}\varphi(d) \\
+= \sum_{d=1}^{n} \varphi(d) \cdot \left\lfloor\frac{n}{d}\right\rfloor \cdot \left\lfloor\frac{n}{d}\right\rfloor</script><p>这样就可以做了。可以用欧拉筛筛出欧拉函数的前缀和，使用整除分块进行优化。</p>
+<h3 id="Luogu-P2257-YY的GCD"><a href="#Luogu-P2257-YY的GCD" class="headerlink" title="Luogu P2257 YY的GCD"></a><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2257">Luogu P2257 YY的GCD</a></h3><p>给定$n,m$，求</p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^n\sum_{j=1}^m [\gcd(i,j)\in Prime]</script><h3 id="做法-1"><a href="#做法-1" class="headerlink" title="做法"></a>做法</h3><p>我们不知道$\gcd(i,j)$是多少，所以我们枚举它（这里假定$n \leqslant m$）：</p>
+<script type="math/tex; mode=display">
+\sum_{p \in Prime}^n \sum_{i=1}^n\sum_{j=1}^m [\gcd(i,j)=p]</script><p>同时除以$k$得到</p>
+<script type="math/tex; mode=display">
+\sum_{p \in Prime}^n \sum_{i=1}^{\left\lfloor\frac{n}{p}\right\rfloor} \sum_{j=1}^{\left\lfloor\frac{m}{p}\right\rfloor} [\gcd(i,j)=1]</script><p>利用一下$\mu$的性质：$\large \sum_{d \mid n} \mu(d) = [n = 1]$</p>
+<p>像上一题那样，把后面替换掉：</p>
+<script type="math/tex; mode=display">
+\sum_{p \in Prime}^n \sum_{i=1}^{\left\lfloor\frac{n}{p}\right\rfloor} \sum_{j=1}^{\left\lfloor\frac{m}{p}\right\rfloor} \sum_{d \mid \gcd(i,j)} \mu(d)</script><p>枚举$d$，把$d$提到前面。因为$d \mid \gcd(i,j)$，所以$i,j$是$d$的倍数，把它们上限全都除上$d$，后面再乘回去，发现个数可直接求，所以去掉两个求和：</p>
+<script type="math/tex; mode=display">
+\sum_{p \in Prime}^n \sum_{d=1}^{\left\lfloor\frac{n}{p}\right\rfloor} \mu(d) \cdot \left\lfloor\frac{n}{pd}\right\rfloor \cdot \left\lfloor\frac{m}{pd}\right\rfloor</script><p>但是这样的复杂度还是过不去。我们继续优化：设$T = p \cdot d$，枚举$T$，再次提到前面去：</p>
+<script type="math/tex; mode=display">
+\sum_{T=1}^{n} \sum_{p \mid T, p \in Prime} \left\lfloor \frac{n}{T} \right\rfloor \cdot \left\lfloor \frac{m}{T} \right\rfloor \cdot \mu(\frac{T}{p})</script><p>而后面还是可以预处理+整除分块进行优化。</p>
 <h1 id="杜教筛"><a href="#杜教筛" class="headerlink" title="杜教筛"></a>杜教筛</h1><h2 id="一般式"><a href="#一般式" class="headerlink" title="一般式"></a>一般式</h2><p>我们要求$\large \sum_{i=1}^{n} f(i)$</p>
-<p>用狄利克雷卷积，设有积性函数$F,g$满足$F = f \cdot g$，记$S(n)$为上式。如果说我们的$F,g$都是很容易求的函数，那么我们就可以用它们来求$f$。那么，我们推一下$F$的前缀和：<br>$$<br>\sum_{i=1}^{n}F(i) = \sum_{i=1}^{n}\sum_{d | n} g(d) \cdot f(\frac{n}{d}) \<br>= \sum_{d=1}^{n}g(d) \cdot \sum_{i=1}^{\left\lfloor \frac{n}{d} \right\rfloor} f(i) \<br>= \sum_{d=1}^{n}g(d) \cdot S(\frac{n}{d})<br>$$<br>我们要求的是$S(n)$，所以我们从右式中拆一个出来，即把$i=1$单独考虑：<br>$$<br>\sum_{i=1}^{n}F(i) = g(1) \cdot S(n) + \sum_{d=2}^{n}g(d) \cdot S(\frac{n}{d}) \<br>g(1) \cdot S(n) = \sum_{i=1}^{n}F(i) - \sum_{d=2}^{n}g(d) \cdot S(\frac{n}{d})<br>$$<br>这就是杜教筛的一般式。现在我们来举几个例子：</p>
-<h2 id="例题-1"><a href="#例题-1" class="headerlink" title="例题"></a>例题</h2><h3 id="Luogu-P4213-【模板】杜教筛（Sum）"><a href="#Luogu-P4213-【模板】杜教筛（Sum）" class="headerlink" title="Luogu P4213 【模板】杜教筛（Sum）"></a><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4213">Luogu P4213 【模板】杜教筛（Sum）</a></h3><p>给定正整数$n$，求：<br>$$<br>ans1 = \sum_{i=1}^{n} \varphi(i) \<br>ans2 = \sum_{i=1}^{n} \mu(i)<br>$$</p>
-<h3 id="做法-2"><a href="#做法-2" class="headerlink" title="做法"></a>做法</h3><p>由$\mu \cdot I = \epsilon$，很自然想到$F = \epsilon, g = I$，代入原式子即得<br>$$<br>S(n) = 1 - \sum_{d=2}^{n}S(\frac{n}{d})<br>$$<br>同时，因为$\varphi \cdot I = id$，代入一般式得<br>$$<br>S(n) = \frac{n \cdot (n+1)}{2} - \sum_{d=2}^{n}S(\frac{n}{d})<br>$$</p>
-<p>类似地，我们使用整除分块+记忆化搜索解决。但是出杜教筛的题$n$一般较大，可以手写个 hash 或者直接使用<code>unordered_map</code>解决。</p>
+<p>用狄利克雷卷积，设有积性函数$F,g$满足$F = f \cdot g$，记$S(n)$为上式。如果说我们的$F,g$都是很容易求的函数，那么我们就可以用它们来求$f$。那么，我们推一下$F$的前缀和：</p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{n}F(i) = \sum_{i=1}^{n}\sum_{d | n} g(d) \cdot f(\frac{n}{d}) \\
+= \sum_{d=1}^{n}g(d) \cdot \sum_{i=1}^{\left\lfloor \frac{n}{d} \right\rfloor} f(i) \\
+= \sum_{d=1}^{n}g(d) \cdot S(\frac{n}{d})</script><p>我们要求的是$S(n)$，所以我们从右式中拆一个出来，即把$i=1$单独考虑：</p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{n}F(i) = g(1) \cdot S(n) + \sum_{d=2}^{n}g(d) \cdot S(\frac{n}{d}) \\
+g(1) \cdot S(n) = \sum_{i=1}^{n}F(i) - \sum_{d=2}^{n}g(d) \cdot S(\frac{n}{d})</script><p>这就是杜教筛的一般式。现在我们来举几个例子：</p>
+<h2 id="例题-1"><a href="#例题-1" class="headerlink" title="例题"></a>例题</h2><h3 id="Luogu-P4213-【模板】杜教筛（Sum）"><a href="#Luogu-P4213-【模板】杜教筛（Sum）" class="headerlink" title="Luogu P4213 【模板】杜教筛（Sum）"></a><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4213">Luogu P4213 【模板】杜教筛（Sum）</a></h3><p>给定正整数$n$，求：</p>
+<script type="math/tex; mode=display">
+ans1 = \sum_{i=1}^{n} \varphi(i) \\
+ans2 = \sum_{i=1}^{n} \mu(i)</script><h3 id="做法-2"><a href="#做法-2" class="headerlink" title="做法"></a>做法</h3><p>由$\mu \cdot I = \epsilon$，很自然想到$F = \epsilon, g = I$，代入原式子即得</p>
+<script type="math/tex; mode=display">
+S(n) = 1 - \sum_{d=2}^{n}S(\frac{n}{d})</script><p>同时，因为$\varphi \cdot I = id$，代入一般式得</p>
+<script type="math/tex; mode=display">
+S(n) = \frac{n \cdot (n+1)}{2} - \sum_{d=2}^{n}S(\frac{n}{d})</script><p>类似地，我们使用整除分块+记忆化搜索解决。但是出杜教筛的题$n$一般较大，可以手写个 hash 或者直接使用<code>unordered_map</code>解决。</p>
 
     </div>
 
